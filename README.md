@@ -4,4 +4,4 @@
 
 #### My passion is to work with Openstack
 
-##### We are continue
+##### We are continue, and continue
