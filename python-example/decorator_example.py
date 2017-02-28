@@ -2,16 +2,19 @@
 
 # We have a fucntion to return the total of two number as below content:
 
+
 def add(x, y):
     return x + y
 
 # Test
-print add(100,300)
+
+print add(100, 300)
 
 # Now we have two condition.
 # Condition 1:  If x < 100 and y < 100 then raise Exception. 
 # Condition 2: We must still use all add function and don't 
-# modify conent of the add function.
+# modify content of the add function.
+
 
 def wrapper(func): #1
     def inner(x, y): #2
