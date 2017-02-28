@@ -42,6 +42,3 @@ class ControlIptable(object):
         :return:
         """
 
-if __name__ == '__main__':
-    x = ControlIptable('ubuntu')
-    x.action('show')
