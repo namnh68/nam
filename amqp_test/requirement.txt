@@ -1,0 +1,2 @@
+oslo.config==3.23.0
+oslo.messaging==5.19.0
