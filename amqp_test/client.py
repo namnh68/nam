@@ -28,10 +28,10 @@ class TargetClient(object):
 
 def main():
     test_rpc = TargetClient()
-    for i in range(100):
+    for i in range(10):
         time.sleep(1)
-        test_rpc.call_func1()
-        test_rpc.call_func2()
+        print test_rpc.call_func1()
+        print test_rpc.call_func2()
 
 if __name__ == '__main__':
     main()

@@ -5,18 +5,18 @@ import config
 
 CONF = config.CONF
 transport = om.get_transport(CONF)
-target = om.Target(topic='test_amqp', server='test_amqp')
+target = om.Target(topic='test-amqp', server='test_amqp')
 
 
 class ServerListen(object):
     """
     Sever side
     """
-    def test1(self):
+    def test1(self, cctx):
         print "The test1 function was called"
         return "Here is function 1"
 
-    def test2(self):
+    def test2(self, cctx):
         print "The test2 function was called"
         return "Here is function 2"
 
