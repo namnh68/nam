@@ -6,6 +6,7 @@ Trong seri tiếp theo của chủ đề **Rolling upgrade** tôi sẽ phân tí
  
 ##### 1. Online Schema Migration 
 Cho phép thay đổi lược đồ cơ sở dữ liệu mà **không** yêu cầu tắt dịch vụ (không hỗ trợ thay đổi về phiên bản cũ hơn.
+
 Lược đồ cơ sở dữ liệu ở đây ta có thể hiểu là database của một service. Hãy thử hình dung rằng trong phiên bản kế tiếp database đã bị thay đổi có thể là thêm cột/bảng, xóa cột/bảng, hoặc sửa lại tên cột/bảng. Vậy làm thế nào mà ta có thể upgrade database lên phiên bản kế tiếp mà không phải tắt service, đúng là một bài toán khó đúng không các bạn đọc :). Nhưng không sao, khó đến mấy chúng ta cũng phải làm bằng được, nếu khó quá thì mạnh dạn bỏ qua :-). Và có một lời giải cho bài toán này là sử dụng tính năng “trigger” trong database và cụ thể trong Openstack có Keystone và Glance đã sử dụng tính năng này để thực hiện việc Rolling upgrade.
 Vậy “trigger” là gì? Trigger được dùng để thực hiện một hành động như tạo xóa bản ghi trước hoặc sau khi thực hiện một hành động nào đó trong database.
 *Ví dụ*: ta có thể tạo ra một trigger để trước khi ghi một bản ghi vào trong table A thì tạo một bản ghi vào trong table B.
