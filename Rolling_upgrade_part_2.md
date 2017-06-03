@@ -1,10 +1,10 @@
-### Rolling-Upgrade [Part 2]
+## Rolling-Upgrade [Part 2]
 
 Trong seri tiếp theo của chủ đề **Rolling upgrade** tôi sẽ phân tích về tám tính năng mà một project cần được hỗ trợ để được công nhận có tính năng Rolling upgrade.
 
 --------------------------------
  
-##### 1. Online Schema Migration 
+### 1. Online Schema Migration 
 Cho phép thay đổi lược đồ cơ sở dữ liệu mà **không** yêu cầu tắt hết dịch vụ (không hỗ trợ thay đổi về phiên bản cũ hơn).
 Lược đồ cơ sở dữ liệu ở đây ta có thể hiểu là database của một service. Hãy thử hình dung rằng trong phiên bản kế tiếp database đã bị thay đổi như thêm cột/bảng, xóa cột/bảng, hoặc sửa lại tên cột/bảng. Vậy làm thế nào mà ta có thể upgrade database lên phiên bản kế tiếp mà không phải tắt hết tất service cùng một lúc rồi bật, đúng là một bài toán khó đúng không các bạn đọc :). Nhưng không sao, khó đến mấy chúng ta cũng phải làm bằng được, nếu khó quá thì mạnh dạn bỏ qua :-). Và có một lời giải cho bài toán này là sử dụng tính năng **“trigger”** trong database và cụ thể trong Openstack đã có Keystone và Glance sử dụng tính năng này để thực hiện việc **Rolling upgrade**. 
 
@@ -57,4 +57,10 @@ Thực hiện contract phase sẽ xóa trigger và xóa “old” table
 
 Chúng ta đã hoàn thành quá trình upgrade hệ thống sử dụng trigger để xử lý vấn đề thay đổi database. Các bạn cũng thấy rằng trong suốt quá trình rolling upgrade thì service ở phiên bản cũ hay phiên bản mới đều có thể tương tác với DB để tránh việc downtime cho người dùng rồi chứ.
  
-Tiếp theo tôi sẽ phân tích tính năng thứ hai là 
+Tiếp theo tôi sẽ phân tích tính năng thứ hai là
+
+### 2.Maintenance Mode
+ Là chế độ đặt một node vào trạng thái duy trì, bảo hành sửa chữa để cho hệ thống biết để không đặt resource trên node đó nữa khi có yêu cầu từ người dụng tạo mới resource. Tôi sẽ lấy một ví dụ cụ thể để mà một project đã tích hợp tính năng này vào đó chính là Nova.
+
+ Trong Nova có các thành phần như: nova-api, nova-conductor, nova-scheduler, nova-compute,...
+Trong đó: nova-compute dùng để tạo ra các máy ảo, vậy máy ảo ở đây chính là resource. Nova-scheduler sẽ làm nhiệm vụ tính toán để đặt con máy ảo trên nova-compute nào cho phù hợp. Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintain mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ sẽ đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo.
