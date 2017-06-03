@@ -60,7 +60,14 @@ Chúng ta đã hoàn thành quá trình upgrade hệ thống sử dụng trigger
 Tiếp theo tôi sẽ phân tích tính năng thứ hai là
 
 ### 2.Maintenance Mode
- Là chế độ đặt một node vào trạng thái duy trì, bảo hành sửa chữa để cho hệ thống biết để không đặt resource trên node đó nữa khi có yêu cầu từ người dụng tạo mới resource. Tôi sẽ lấy một ví dụ cụ thể để mà một project đã tích hợp tính năng này vào đó chính là Nova.
+ Là chế độ đặt một node vào trạng thái duy trì, bảo hành sửa chữa để cho hệ thống không đặt resources trên node đó nữa khi có yêu cầu từ người dùng tạo mới resources. Tôi sẽ lấy một ví dụ cụ thể để mà một project đã tích hợp tính năng này vào đó chính là Nova.
 
  Trong Nova có các thành phần như: nova-api, nova-conductor, nova-scheduler, nova-compute,...
-Trong đó: nova-compute dùng để tạo ra các máy ảo, vậy máy ảo ở đây chính là resource. Nova-scheduler sẽ làm nhiệm vụ tính toán để đặt con máy ảo trên nova-compute nào cho phù hợp. Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintain mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ sẽ đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo.
+
+Trong đó: 
+- nova-compute dùng để tạo ra các máy ảo, vậy máy ảo ở đây chính là resource.
+- nova-scheduler sẽ làm nhiệm vụ tính toán để đặt con máy ảo trên nova-compute nào cho phù hợp. 
+
+Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintenance mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ sẽ đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo. 
+=> Đó chính là ý nghĩa của tính năng **Maintenance Mode**.
+
