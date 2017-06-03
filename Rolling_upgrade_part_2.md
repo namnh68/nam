@@ -1,10 +1,14 @@
-Trong seri tiếp theo của chủ đề Rolling upgrade tôi sẽ phân tích về tám tính năng mà một project cần phải có để được công nhận có tính năng Rolling upgrade
+### Rolling-Upgrade [Part 2]
+
+Trong seri tiếp theo của chủ đề **Rolling upgrade** tôi sẽ phân tích về tám tính năng mà một project cần được hỗ trợ để được công nhận có tính năng Rolling upgrade.
+
+--------------------------------
  
-Online Schema Migration 
-Cho phép thay đổi lược đồ cơ sở dữ liệu mà không yêu cầu tắt dịch vụ (không hỗ trợ thay đổi về phiên bản cũ hơn.
+##### 1. Online Schema Migration 
+Cho phép thay đổi lược đồ cơ sở dữ liệu mà **không** yêu cầu tắt dịch vụ (không hỗ trợ thay đổi về phiên bản cũ hơn.
 Lược đồ cơ sở dữ liệu ở đây ta có thể hiểu là database của một service. Hãy thử hình dung rằng trong phiên bản kế tiếp database đã bị thay đổi có thể là thêm cột/bảng, xóa cột/bảng, hoặc sửa lại tên cột/bảng. Vậy làm thế nào mà ta có thể upgrade database lên phiên bản kế tiếp mà không phải tắt service, đúng là một bài toán khó đúng không các bạn đọc :). Nhưng không sao, khó đến mấy chúng ta cũng phải làm bằng được, nếu khó quá thì mạnh dạn bỏ qua :-). Và có một lời giải cho bài toán này là sử dụng tính năng “trigger” trong database và cụ thể trong Openstack có Keystone và Glance đã sử dụng tính năng này để thực hiện việc Rolling upgrade.
-Vậy “trigger” là gì? Trigger được dùng để thực hiện một hành động như tạo xóa bản ghi trước hoặc sau khi thực hiện một hành động nào đó trong database
-Ví dụ như: ta có thể tạo ra một trigger để trước khi ghi một bản ghi vào trong table A thì tạo một bản ghi vào trong table B.
+Vậy “trigger” là gì? Trigger được dùng để thực hiện một hành động như tạo xóa bản ghi trước hoặc sau khi thực hiện một hành động nào đó trong database.
+*Ví dụ*: ta có thể tạo ra một trigger để trước khi ghi một bản ghi vào trong table A thì tạo một bản ghi vào trong table B.
 Bây giờ tôi sẽ lấy một đầu bài và xin các bạn hay luôn nhớ nó trong quá trình đọc bài này để có thể hiểu xuyên suốt nhé:
 Bài toán: Database của Glance tại phiên bản N có một cột tên là “old” nhưng sang database tại phiên bản N+1 đã bị xóa và thay thế bằng cột mới tên là “new”. Vậy là thế nào để người dùng Glance tại phiên bản N có thể *rolling upgrade* lên phiên bản (N+1).
  
@@ -12,13 +16,19 @@ Lời giải chính là việc tôi sẽ phân tích từng giai đoạn để c
  
 
  
-Trong quá trình rolling upgrade sử dụng trigger ta sẽ có 3 pha chính
-Expand: dùng để thêm cột, bảng, trigger trong database
-Migrate: dùng để di chuyển dữ liệu từ cũ sang mới
-Contract: dùng xóa cột, bảng, trigger trong database
-Hiện tại có 2 services (service_1, service_2) tương tác với DB:
-(1): Khi 2 services đang chạy tại phiên bản N thì chúng đều tương tác với “old” table
-(2): Expand phase: 
+Trong quá trình rolling upgrade sử dụng trigger ta sẽ có 3 pha chính:
+- Expand: dùng để thêm cột, bảng, trigger trong database.
+- Migrate: dùng để di chuyển dữ liệu từ cũ sang mới.
+- Contract: dùng xóa cột, bảng, trigger trong database.
+
+Hãy thử hình dung rằng có 2 services (A và B) cùng tương tác với database:
+
+- (1): Chuẩn bị upgrade.
+
+Khi 2 services đang chạy tại phiên bản N thì chúng đều tương tác với “old” table.
+
+- (2): Expand phase
+
 Lúc này DB sẽ có “new” table và trigger. Nếu trên A và B tạo ra các bản ghi ở “old” table thì trigger sẽ làm nhiệm vụ copy nội dung cần thiết của bản ghi đó sang “new” table.
 Hình màu da cam là thể hiện các dữ liệu được tạo ra sau tại expand phase
 (3) Migrate phase:
