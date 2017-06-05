@@ -23,6 +23,8 @@ Trong quá trình rolling upgrade database sử dụng trigger ta sẽ có 3 pha
 Hãy thử hình dung rằng có 2 services (A và B) cùng tương tác với database:
 ![image1](images/two_services.png)
 
+- Và quá trình upgrade sử dụng trigger như sau:
+![image2](images/rolling_upgrade_part_2.png)
 - Pha (1): Chuẩn bị upgrade.
 
 Khi 2 services đang chạy tại phiên bản N thì chúng đều tương tác với “old” table.
