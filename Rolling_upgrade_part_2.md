@@ -8,7 +8,7 @@ Trong seri tiếp theo của chủ đề **Rolling upgrade** tôi sẽ phân tí
 Cho phép thay đổi lược đồ cơ sở dữ liệu mà **không** yêu cầu tắt hết dịch vụ (không hỗ trợ thay đổi về phiên bản cũ hơn).
 Lược đồ cơ sở dữ liệu ở đây ta có thể hiểu là database của một service. Hãy thử hình dung rằng trong phiên bản kế tiếp database đã bị thay đổi như thêm cột/bảng, xóa cột/bảng, hoặc sửa lại tên cột/bảng. Vậy làm thế nào mà ta có thể upgrade database lên phiên bản kế tiếp mà không phải tắt hết tất service cùng một lúc rồi bật, đúng là một bài toán khó đúng không các bạn đọc :). Nhưng không sao, khó đến mấy chúng ta cũng phải làm bằng được, nếu khó quá thì mạnh dạn bỏ qua :-). Và có một lời giải cho bài toán này là sử dụng tính năng **“trigger”** trong database và cụ thể trong Openstack đã có Keystone và Glance sử dụng tính năng này để thực hiện việc **Rolling upgrade**. 
 
-Vậy **“trigger”** là gì: Trigger được dùng để thực hiện một hành động như tạo xóa bản ghi trước hoặc sau khi thực hiện một hành động nào đó trong database.
+Vậy **“trigger”** là gì: Trigger được hiểu đơn giản là một thủ tục được thực thi trong database khi có một sự kiện xảy ra như update, insert hay delete.
 *Ví dụ*: ta có thể tạo ra một trigger để trước khi ghi một bản ghi vào trong table A thì tạo một bản ghi vào trong table B.
 Bây giờ tôi sẽ lấy một đầu bài và xin các bạn hay **luôn nhớ** nó trong quá trình đọc bài này để có thể hiểu xuyên suốt nhé:
 Bài toán: Database của một service tại phiên bản N có một bảng tên là “old” nhưng sang database tại phiên bản N+1 đã bị xóa và thay thế bằng bảng mới tên là “new”. Vậy làm thế nào để người dùng service đó tại phiên bản N có thể *rolling upgrade* lên phiên bản (N+1).
