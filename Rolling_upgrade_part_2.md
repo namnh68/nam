@@ -1,3 +1,27 @@
+---
+layout: post
+title: Rolling-Upgrade [Part2]
+date: 2017-06-05
+type: post
+published: true
+status: publish
+categories:
+- Bài dịch - Tài liệu
+- Chia sẻ kinh nghiệm
+- Hướng dẫn - Kinh Nghiệm
+- Tài liệu tham khảo
+tags:
+- Rolling-Upgrade
+- Microversion
+meta:
+  _publicize_pending: '1'
+author:
+  login: Nam
+  email: namnh@vn.fujitsu.com
+  display_name: namnh
+  first_name: Nam
+  last_name: Nguyen-Hoai
+---
 ## Rolling-Upgrade [Part 2]
 
 Trong seri tiếp theo của chủ đề **Rolling upgrade** tôi sẽ phân tích về tám tính năng mà một project cần được hỗ trợ để được công nhận có tính năng Rolling upgrade.
