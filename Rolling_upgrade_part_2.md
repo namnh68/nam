@@ -102,3 +102,6 @@ Trong đó:
 Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintenance mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ không đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo. Để người vận hành có thể thao tác thoải mái với node nova-compute 30.
 => Đó chính là ý nghĩa của tính năng **Maintenance Mode**.
 
+Trong bài tiếp theo, chúng ta sẽ tiếp tục phân tích về các tính chất còn lại của tám tính tính trong Rolling upgrade.
+
+Thân ái, hẹn gặp lại!
