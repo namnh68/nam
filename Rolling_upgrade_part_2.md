@@ -10,10 +10,12 @@ Lược đồ cơ sở dữ liệu ở đây ta có thể hiểu là database c�
 
 Vậy **“trigger”** là gì: Trigger được hiểu đơn giản là một thủ tục được thực thi trong database khi có một sự kiện xảy ra như update, insert hay delete.
 *Ví dụ*: ta có thể tạo ra một trigger để trước khi ghi một bản ghi vào trong table A thì tạo một bản ghi vào trong table B.
-Bây giờ tôi sẽ lấy một đầu bài và xin các bạn hay **luôn nhớ** nó trong quá trình đọc bài này để có thể hiểu xuyên suốt nhé:
-Bài toán: Database của một service tại phiên bản N có một bảng tên là “old” nhưng sang database tại phiên bản N+1 đã bị xóa và thay thế bằng bảng mới tên là “new”. Vậy làm thế nào để người dùng service đó tại phiên bản N có thể *rolling upgrade* lên phiên bản (N+1).
+
+Bây giờ tôi sẽ lấy một đầu bài và xin các bạn hay **luôn nhớ** nó trong suốt quá trình đọc bài này để có thể hiểu xuyên suốt nhé.
+
+**Bài toán:** Database của một service tại phiên bản N có một bảng tên là “old” nhưng sang database tại phiên bản N+1 đã bị xóa và thay thế bằng bảng mới tên là “new”. Vậy làm thế nào để người dùng service đó tại phiên bản N có thể *rolling upgrade* lên phiên bản (N+1).
  
-Lời giải chính là việc tôi sẽ phân tích từng giai đoạn để các bạn có thể thấy được không có thời điểm nào mà service xung đột với database
+Lời giải chính là việc tôi sẽ phân tích từng giai đoạn để các bạn có thể thấy được không có thời điểm nào, mà service xung đột với database
 
 Trong quá trình rolling upgrade database sử dụng trigger ta sẽ có 3 pha chính:
 - Expand: dùng để thêm cột, bảng, trigger trong database.
@@ -23,22 +25,24 @@ Trong quá trình rolling upgrade database sử dụng trigger ta sẽ có 3 pha
 Hãy thử hình dung rằng có 2 services (A và B) cùng tương tác với database:
 ![image1](images/two_services.png)
 
-Và quá trình upgrade sử dụng trigger như sau:
+Và quá trình rolling upgrade sử dụng trigger có các pha như sau: 
 ![image2](images/rolling_upgrade_part_2.png)
 
 - Pha (1): Chuẩn bị upgrade
 
-Khi 2 services đang chạy tại phiên bản N thì chúng đều tương tác với “old” table.
+Khi 2 services (A và B) đang chạy tại phiên bản N thì chúng đều tương tác với “old” table.
 
 - Pha (2): Expand database
 
-Lúc này DB sẽ có “new” table và trigger. Nếu trên A và B tạo ra các bản ghi ở “old” table thì trigger sẽ làm nhiệm vụ copy nội dung cần thiết của bản ghi đó sang “new” table.
-Hình màu da cam là thể hiện các dữ liệu được tạo ra tại expand phase
+Lúc này DB sẽ có “new” table và trigger. Nếu trên A và B tạo ra các bản ghi ở “old” table thì trigger sẽ làm nhiệm vụ copy nội dung cần thiết của bản ghi đó sang “new” table. 
+
+Hình ngũ giác màu da cam thể hiện các dữ liệu được tạo ra tại pha expand, và hình tam giác màu da cam thể hiện các dữ liệu được tạo bởi trigger.
+
+Hình ngũ giác màu xanh da trời thể hiện các dữ liệu đã có sẵn trước pha expand.
 
 - Pha (3) Migrate database
 
-Copy toàn bộ dữ liệu ở “old” table trước thời điểm tạo trigger sang “new” table. Nghĩa là hình có màu xanh da trời sẽ được chuyển sang “new” table.
-Kết quả là “old” table và “new” table đều có nội dung tương đương nhau và các service vẫn đọc ghi vào trong “old” table và ngay lập tức cũng được trigger copy sang “new” table
+Copy toàn bộ dữ liệu ở “old” table trước thời điểm tạo trigger sang “new” table. Nghĩa là tất cả các hình ngũ giác màu xanh da trời sẽ được copy sang thành hình tam giác tương ứng tại "new" table.
 
 - Pha (4) Deploy phase
 
@@ -63,14 +67,14 @@ Chúng ta đã hoàn thành quá trình upgrade hệ thống sử dụng trigger
 Tiếp theo tôi sẽ phân tích tính năng thứ hai là
 
 ### 2. Maintenance Mode
- Là chế độ đặt một node vào trạng thái duy trì, bảo hành sửa chữa để cho hệ thống không đặt resources trên node đó nữa khi có yêu cầu từ người dùng tạo mới resources. Tôi sẽ lấy một ví dụ cụ thể để mà một project đã tích hợp tính năng này vào đó chính là Nova.
+Là chế độ đặt một node vào trạng thái duy trì, bảo hành sửa chữa để cho hệ thống không đặt resources trên node đó nữa khi có yêu cầu từ người dùng tạo mới resources. Tôi sẽ lấy một ví dụ cụ thể để mà một project đã tích hợp tính năng này vào đó chính là Nova.
 
- Trong Nova có các thành phần như: nova-api, nova-conductor, nova-scheduler, nova-compute,...
+Trong Nova có các thành phần như: nova-api, nova-conductor, nova-scheduler, nova-compute,...
 
 Trong đó: 
 - nova-compute dùng để tạo ra các máy ảo, vậy máy ảo ở đây chính là resource.
 - nova-scheduler sẽ làm nhiệm vụ tính toán để đặt con máy ảo trên nova-compute nào cho phù hợp. 
 
-Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintenance mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ sẽ đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo. 
+Vậy câu chuyện là khi người vận hành muốn bảo trình một node nova-compute 30 thì đâu tiên họ phải ra lệnh cho nova kích hoạt chế độ **maintenance mode** cho node nova-compute 30 lên, lúc đó nova-scheduler sẽ không đặt máy ảo trên node nova-compute 30 nữa kể cả tài nguyên trên đó vẫn còn rất nhiều khi có yêu cầu từ người dụng tạo máy ảo. Để người vận hành có thể thao tác thoải mái với node nova-compute 30.
 => Đó chính là ý nghĩa của tính năng **Maintenance Mode**.
 
