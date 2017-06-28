@@ -77,7 +77,7 @@ def main():
                       metavar="END_MONTH", help="End month")
     parser.add_option("-y", "--year", action='store', type="int",
                       metavar="YEAR",
-                      dest="year", help="Year", default=2016)
+                      dest="year", help="Year", default=2017)
     parser.add_option("-k", "--keyword", action='append',
                       type="string", dest="keywords",
                       metavar="KEYWORDS", help="Keyword to search")
