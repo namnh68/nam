@@ -8,6 +8,6 @@ Và điền thông theo hướng dẫn sau
 
 ![image2](../images/step2.png)
 
-Kết thúc các bước đăng kí, các bạn sẽ nhận được một email confirm 
+Kết thúc các bước đăng kí, các bạn sẽ nhận được một email confirm, và các bạn chỉ cần reply email đó là hoàn thành các bước đăng kí một tài khoản OpenStack.
 
 ![image3](../images/step3.png)
