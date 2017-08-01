@@ -9,3 +9,5 @@ Và điền thông theo hướng dẫn sau
 ![image2](../images/step2.png)
 
 Kết thúc các bước đăng kí, các bạn sẽ nhận được một email confirm 
+
+![image3](../images/step3.png)
