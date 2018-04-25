@@ -5,15 +5,22 @@ import os
 
 
 OWNER = raw_input('Github user: ')
+# FOLDER = raw_input('Folder to save: ')
 URL = 'https://api.github.com/users/%s/repos' % OWNER
 FILE = '%s_repos.txt' % OWNER
+try:
+    TOKEN = os.environ['token_github']
+except KeyError:
+    print("You must add your token as variable enviroment by running this 
+          "command on bash shell: export token_github=your_token")
+
 
 
 def get_repo_from_api():
     page = 1
     repos = []
     headers = {
-        "Authorization": "token <the_token_from_Github>"}
+        "Authorization": "token {}".format(TOKEN)}
 
     requests.packages.urllib3.disable_warnings()
     print('Collecting data from Github...')
@@ -35,6 +42,15 @@ def get_repo_from_api():
             f.write(repo + '\n')
     return repos
 
+def create_folder(name_folder):
+    full_path = os.path.join(os.getcwd(), name_folder)
+    if os.path.exists(full_path):
+        print('No need to create the {0} folder'.format(name_folder))
+        os.chdir(full_path)
+    else:
+        print('Need to create the {0} folder first'.format(name_folder))
+        os.makedirs(full_path)
+        os.chdir(full_path)
 
 def get_repo_from_file(file):
     repos = []
@@ -57,6 +73,7 @@ def main():
         repos = get_repo_from_file(FILE)
     else:
         repos = get_repo_from_api()
+    create_folder(OWNER)
     clone_repo(repos)
 
 
